@@ -1,0 +1,9 @@
+*.in
+*.out
+*.test
+*~
+*.swp
+*.swo
+*.bak
+*.bak2
+*template
