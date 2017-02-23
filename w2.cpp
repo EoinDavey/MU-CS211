@@ -1,9 +1,6 @@
 #include<iostream>
-#include<cstdio>
-#include<string>
 #include<queue>
 #include<map>
-#include<algorithm>
 
 int c[256];
 std::map<char,std::string> d;
@@ -15,8 +12,7 @@ struct node{
 };
 
 bool comp (const node * lhs, const node * rhs){
-    if(lhs->occ != rhs->occ) return lhs->occ > rhs->occ;
-    return lhs->data > rhs->data;
+    return ((lhs->occ != rhs->occ) ? lhs->occ > rhs->occ : lhs->data > rhs->data);
 }
 
 void trav(node * root,std::string c){
@@ -31,13 +27,11 @@ int main(){
     getline(std::cin,s);
     for(int i=0;i<s.length();i++)c[s[i]]++;
     std::priority_queue<node *, std::vector<node *> ,decltype(&comp) > q(comp);
-    for(int i=0;i<256;i++)
-        if(c[i]>0)q.push(new node(c[i],i,NULL,NULL));
+    for(int i=0;i<256;i++) if(c[i]>0)q.push(new node(c[i],i,NULL,NULL));
     node * f, * r;
     while(q.size()>1)
         f = q.top(), q.pop(), r = q.top(), q.pop(), q.push(new node(f->occ + r->occ, ((f->data < r->data) ? f->data: r->data),f,r));
     trav(q.top(),"");
-    for(int i = 0; i < s.length(); i++)
-        std::cout << d[s[i]];
+    for(int i = 0; i < s.length(); i++) std::cout << d[s[i]];
     std::cout << "\n";
 }
