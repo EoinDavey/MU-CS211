@@ -47,12 +47,13 @@ void insert(string * s, int i, node * r){
 int main(){
     ifstream file ("dictionary.txt");
     node * top = new node();
+    string l;
     while(getline(file, l))
         insert(&l,0,top);
     cin >> input;
     N = input.length();
-    input="";
-    dfs(top, 0, &input);
+    l="";
+    dfs(top, 0, &l);
     delete top;
     file.close();
     sort(ls.begin(),ls.end(), [](string lhs, string rhs){if(lhs.length()==rhs.length())return lhs < rhs; else return lhs.length() > rhs.length(); });
