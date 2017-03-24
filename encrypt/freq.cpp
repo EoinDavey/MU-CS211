@@ -18,13 +18,15 @@ int main(){
     vector<pair<double, char> > ls;
     int tot=0;
     while(getline(cin,s)){
-        cout << s << endl;
         for(int i=0;i<s.length();c[s[i++]]++)
             if(s[i]!=' ')tot++;
     }
+    cout << tot << endl;
     for(int i=0;i<256;i++)
         if(c[i]>0)ls.push_back(make_pair(((double)c[i])/((double)tot),i));
     sort(ls.begin(), ls.end(), greater<pair<double, char> >());
+    for(int i = 0; i < ls.size(); i++)
+        printf("%c : %d times, %lf frequency\n",ls[i].second,c[ls[i].second],ls[i].first);
     cout << ls.size() << endl;
     sym[ls[0].second] = ' ';
     for(int l = 0; l < 9; l++){
