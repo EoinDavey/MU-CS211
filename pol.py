@@ -1,8 +1,5 @@
 from fractions import gcd
 
-c1 = 23
-c2 = 27
-
 def inverse(x, m):
     a, b, u = 0, m, 1
     while x > 0:
@@ -32,5 +29,17 @@ def rho(g,t,p):
             return (pow(c1,p-1-l,p)*c2) % p;
         m, l = m+1, (l+((p-1)/d))%(p-1)
     return False
- 
-print rho(2,3,29)
+
+c1 = 23
+c2 = 27
+g = 0
+t = 0
+p = 0
+
+gtp = raw_input().split(" ")
+c = raw_input().split(" ")
+
+c1 = int(c[0])
+c2 = int(c[1])
+
+print rho(int(gtp[1]),int(gtp[2]),int(gtp[0]))

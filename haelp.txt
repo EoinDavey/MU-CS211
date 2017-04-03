@@ -1,0 +1,62 @@
+import java.util.*;
+public class Lab6
+{
+  public static void main(String agrs[])
+  {
+    Scanner s = new Scanner(System.in);
+    long p = s.nextLong();
+    long g = s.nextLong();
+    long gxmodp = s.nextLong();
+    long b1 = s.nextLong();
+    long b2 = s.nextLong();
+    long x = breakcode(p, g, gxmodp);
+    System.out.println(decrypt(g, p, x, b1, b2));
+  }
+  public static long breakcode(long p, long g, long gxmodp)
+  {
+   long answer = 1;
+   long k =1;
+   long temp = 2;
+   while(temp!=gxmodp )
+   {
+     k++;
+     temp =modPow(g, k, p);
+
+   }
+   return k;
+
+  }
+  public static long modPow(long number, long power, long modulus){
+    if(power==0)
+    return 1;
+    else if (power%2==0) {
+    long halfpower=modPow(number, power/2, modulus);
+    return modMult(halfpower,halfpower,modulus);
+     }else{
+     long halfpower=modPow(number, power/2, modulus);
+     long firstbit = modMult(halfpower,halfpower,modulus);
+     return modMult(firstbit,number,modulus);
+     }
+   }
+  public static long modMult(long first, long second, long modulus){
+   if(second==0)
+    return 0;
+    else if (second%2==0) {
+    long half=modMult(first, second/2, modulus);
+    return (half+half)%modulus;
+    }else{
+    long half=modMult(first, second/2, modulus);
+    return (half+half+first)%modulus;
+     }
+   }
+  public static long decrypt(long g, long p, long x, long b1, long b2)
+  {
+    long power = p -1 -x;
+   // System.out.println(power);
+    long c1x = modPow(b1, power, p);
+   // System.out.println(c1x);
+    long c2 = b2%p;
+    long answer = modMult(c1x, c2, p);
+    return answer;
+  }
+}

@@ -20,10 +20,10 @@ struct node{
     }
 };
 
-void dfs(node * r, bool used[100], string * s){
+void dfs(node * r, bool * used, string * s){
     if(r->visited)return;
     if(r->word)
-        if((*s).length() > maxLen) maxLen = (*s).length();
+        if(s->length() > maxLen) maxLen = s->length();
     r->visited = true;
     for(int i = 0; i < N; i++)
         if(!used[i])
@@ -50,13 +50,13 @@ int main(){
     maxLen=0;
     node * top = new node();
     char * buff = (char *) malloc(sizeof(char)*100);
-    bool used[100];
-    memset(used, false, sizeof(used));
+    bool * used = (bool *) calloc(100,sizeof(bool));
     while(scanf("%s",buff)==1)
         insert(buff,0,top);
     free(buff);
     string l;
     dfs(top, used, &l);
+    free(used);
     delete top;
     cout << maxLen << endl;
     return 0;

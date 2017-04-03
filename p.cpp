@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int N,maxLen;
+int N;
 string input;
 vector<string> ls;
 
@@ -20,20 +20,15 @@ struct node{
     }
 };
 
-void dfs(node * r, bool used[100], string * s){
+void dfs(node * r, int used, string * s){
     if(r->visited)return;
     if(r->word)
-        if((*s).length() > maxLen) maxLen = (*s).length();
+         ls.push_back(string(*s));
     r->visited = true;
     for(int i = 0; i < N; i++)
-        if(!used[i])
-            if(r->adj[input[i]-'a']!=NULL){
-                (*s)+=input[i];
-                used[i]=true;
-                dfs(r->adj[input[i]-'a'],used,s);
-                used[i]=false;
-                s->erase(s->end()-1);
-            }
+        if((used&(1<<i))==0)
+            if(r->adj[input[i]-'a']!=NULL)
+                (*s)+=input[i], dfs(r->adj[input[i]-'a'],(used|(1<<i)),s), s->erase(s->end()-1);
 }
 
 void insert(char * s, int i, node * r){
@@ -45,19 +40,20 @@ void insert(char * s, int i, node * r){
 }
 
 int main(){
-    cin >> input;
-    N = input.length();
-    maxLen=0;
+    FILE * f = fopen("dictionary.txt","r");
     node * top = new node();
     char * buff = (char *) malloc(sizeof(char)*100);
-    bool used[100];
-    memset(used, false, sizeof(used));
-    while(scanf("%s",buff)==1)
+    while(fscanf(f, "%s",buff)==1)
         insert(buff,0,top);
+    fclose(f);
     free(buff);
+    cin >> input;
+    N = input.length();
     string l;
-    dfs(top, used, &l);
+    dfs(top, 0, &l);
     delete top;
-    cout << maxLen << endl;
+    sort(ls.begin(),ls.end(), [](string lhs, string rhs){if(lhs.length()==rhs.length())return lhs < rhs; else return lhs.length() > rhs.length(); });
+    for(int i = 0;i < 10 && i < ls.size(); i++)
+        cout << ls[i] << endl;
     return 0;
 }
