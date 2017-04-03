@@ -27,7 +27,11 @@ int N;
 ll tgt;
 ll res;
 ll a[mx_n];
+ll in[mx_n];
 ll cnt = 0;
+ll lim = 2000;
+ll outS = 0L;
+bool stop = false;
 ll best;
 map<state,ll> memo;
 
@@ -40,6 +44,8 @@ int dp(int cur, ll sum){
     cnt++;
     state s = state(cur,sum);
     map<state,ll>::iterator i = memo.find(s);
+    if(stop)
+        return -1;
     if(i!=memo.end())
         return memo[s];
     if(cur == N || sum > tgt)
@@ -48,16 +54,22 @@ int dp(int cur, ll sum){
     ll leave = dp(cur+1,sum);
     ll ans = (abs(take) < abs(leave)) ? take : leave;
     memo[s] = ans;
-    if(abs(ans) < best)
+    if(abs(ans) < best && !stop){
         best=abs(ans),printf("new best: %lld\n",ans);
+        if(best<lim) stop = true;
+    }
     return ans;
 }
 
 void print(int cur, ll sum){
     if(cur==N)
         return;
-    if(memo[state(cur+1,sum+a[cur])]==res){
-        printf("%lld ",a[cur]);
+    map<state,ll>::iterator i = memo.find(state(cur+1,sum+a[cur]));
+    if(i==memo.end())
+        return;
+    if((*i).second==res){
+        printf("%lld +",in[cur]);
+        outS+=a[cur];
         print(cur+1,sum+a[cur]);
     } else 
         print(cur+1,sum);
@@ -67,11 +79,14 @@ int main(){
     cin >> N;
     ll sum = 0;
     for(int i = 0; i < N; i++){
-        scanf("%lld",&a[i]);
+        scanf("%lld",&in[i]);
+        a[i] = in[i];
+        //a[i]=in[i] - (in[i]%100L);
         sum+=a[i];
     }
+    sort(a,a+N);
     tgt = (sum+1L)/2L;
-    printf("tgt:%lld\n",tgt);
+    printf("tgt: %lld\n",tgt);
     ll min = best = sum;
     ll ans;
     ll temp;
@@ -79,16 +94,6 @@ int main(){
     printf("Total recursions: %lld\n",cnt);
     print(0,0);
     cout << endl;
-    /*for(int i = 0; i < N; i++){
-        memo.clear();
-        temp = a[i];
-        a[i] = -1;
-        res = dp(0,0);
-        printf("Ignoring %d gives %d\n",temp,res);
-        if(res < min)
-            min = res,ans=i;
-        a[i] = temp;
-    }
-    printf("%d, %d\n",min,ans);*/
+    cout << outS << endl;
     return 0;
 }
