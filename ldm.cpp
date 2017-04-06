@@ -12,6 +12,8 @@ vector<ll> trash;
 int N;
 const int mx_n = 44;
 ll a[mx_n];
+ll mn_dif;
+bool final = false;
 
 void rec(){
     if(q.size()==1){
@@ -23,33 +25,48 @@ void rec(){
     int dif = v1-v2;
     printf("%d,%d\n",v1,v2);
     q.push(dif);
-    if(dif!=0)
+    if(dif < mn_dif)
+        mn_dif = dif;
+    if(final){
+        if(dif!=mn_dif)
+            rec();
+        else
+            right.push_back(dif);
+        bool found = false;
+        for(int i = 0; i < right.size()&&!found; i++){
+            if(right[i]==dif){
+                right.erase(right.begin() + i);
+                found = true;
+                right.push_back(v1);
+                left.push_back(v2);
+            }
+        }
+        for(int i = 0; i < left.size()&&!found; i++){
+            if(left[i]==dif){
+                left.erase(left.begin() + i);
+                found = true;
+                left.push_back(v1);
+                right.push_back(v2);
+            }
+        }
+    } else 
         rec();
-    else
-        right.push_back(0);
-    bool found = false;
-    for(int i = 0; i < right.size()&&!found; i++){
-        if(right[i]==dif){
-            right.erase(right.begin() + i);
-            found = true;
-            right.push_back(v1);
-            left.push_back(v2);
-        }
-    }
-    for(int i = 0; i < left.size()&&!found; i++){
-        if(left[i]==dif){
-            left.erase(left.begin() + i);
-            found = true;
-            left.push_back(v1);
-            right.push_back(v2);
-        }
-    }
 }
 
 int main(){
     scanf("%d",&N);
     for(int i =0; i < N; i++){
         scanf("%lld",&a[i]);
+        mn_dif+=a[i];
+        q.push(a[i]);
+    }
+    rec();
+    while(!q.empty())q.pop();
+    printf("mn_dif:%lld\n",mn_dif);
+    final = true;
+    left.clear();
+    right.clear();
+    for(int i = 0; i < N; i++){
         q.push(a[i]);
     }
     rec();
