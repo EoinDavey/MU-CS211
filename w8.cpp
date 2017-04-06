@@ -24,12 +24,10 @@ struct state{
 
 const int mx_n = 44;
 int N;
-ll tgt;
-ll res;
+ll tgt,res;
 ll a[mx_n];
-ll in[mx_n];
 ll cnt = 0;
-ll lim = 2000;
+ll lim = 1;
 ll outS = 0L;
 bool stop = false;
 ll best;
@@ -68,7 +66,7 @@ void print(int cur, ll sum){
     if(i==memo.end())
         return;
     if((*i).second==res){
-        printf("%lld +",in[cur]);
+        printf("%lld +",a[cur]);
         outS+=a[cur];
         print(cur+1,sum+a[cur]);
     } else 
@@ -78,18 +76,14 @@ void print(int cur, ll sum){
 int main(){
     cin >> N;
     ll sum = 0;
+    ll minA;bool mnb = false;
     for(int i = 0; i < N; i++){
-        scanf("%lld",&in[i]);
-        a[i] = in[i];
-        //a[i]=in[i] - (in[i]%100L);
+        scanf("%lld",&a[i]);
         sum+=a[i];
     }
-    sort(a,a+N);
     tgt = (sum+1L)/2L;
     printf("tgt: %lld\n",tgt);
-    ll min = best = sum;
-    ll ans;
-    ll temp;
+    best = sum;
     res = dp(0,0);
     printf("Total recursions: %lld\n",cnt);
     print(0,0);
