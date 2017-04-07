@@ -66,12 +66,15 @@ int main(){
     final = true;
     left.clear();
     right.clear();
+    ll lsum,rsum;
+    lsum=rsum=0;
     for(int i = 0; i < N; i++){
         q.push(a[i]);
     }
     rec();
     for(int i = 0; i < left.size(); i++){
         //printf(" %lld",left[i]);
+        lsum+=left[i];
         for(int j = 0; j < N; j++){
             if(out[j]==0&&a[j]==left[i]){
                 out[j]=1;
@@ -80,6 +83,7 @@ int main(){
         }
     }
     for(int i = 0; i < right.size(); i++){
+        rsum+=right[i];
         for(int j = 0; j < N; j++){
             if(out[j]==0&&a[j]==right[i]){
                 out[j]=-1;
@@ -87,6 +91,7 @@ int main(){
             }
         }
     }
+    printf("right: %lld, left: %lld, dif: %lld\n",rsum,lsum, lsum-rsum);
     for(int i = 0; i < N; i++){
         printf("%d,",out[i]);
     }

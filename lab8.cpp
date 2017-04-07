@@ -4,9 +4,12 @@
 #include<vector>
 #include<cmath>
 #include<map>
+#include<algorithm>
+
 typedef long long ll;
 
 using namespace std;
+
 
 struct state{
     int n;
@@ -24,14 +27,18 @@ struct state{
 
 const int mx_n = 44;
 int N;
-ll tgt,res;
+bool stop = false;
+ll sum;
+ll tsum = 0;
+int mCur=-1;
+ll tgt;
+ll res;
 ll a[mx_n];
 ll cnt = 0;
-ll lim = 3000;
-ll outS = 0L;
-bool stop = false;
+ll limit = 3000;
 ll best;
 map<state,ll> memo;
+
 int out[mx_n];
 
 ll cost(ll s){
@@ -43,54 +50,60 @@ int dp(int cur, ll sum){
     cnt++;
     state s = state(cur,sum);
     map<state,ll>::iterator i = memo.find(s);
-    /*if(stop)
-        return -1;*/
     if(i!=memo.end())
         return memo[s];
     if(cur == N || sum > tgt)
         return memo[s] = cost(sum);
-    ll take = dp(cur+1, sum+a[cur]);
-    ll leave = dp(cur+1,sum);
+    ll take,leave;
+    take = leave = sum;
+    if(!stop){
+        take = dp(cur+1, sum+a[cur]);
+        leave = dp(cur+1,sum);
+    }
     ll ans = (abs(take) < abs(leave)) ? take : leave;
     memo[s] = ans;
-    /*if(abs(ans) < best && !stop){
+    if(abs(ans) < best)
         best=abs(ans),printf("new best: %lld\n",ans);
-        if(best<lim) stop = true;
-    }*/
+    if(abs(best) < limit)
+        stop = true;
+    if(stop){
+        memo[s] = 0;
+    }
     return ans;
 }
 
 void print(int cur, ll sum){
     if(cur==N)
         return;
-    map<state,ll>::iterator i = memo.find(state(cur+1,sum+a[cur]));
-    if(i==memo.end())
-        return;
-    if((*i).second==res){
+    state s(cur+1,sum+a[cur]);
+    map<state,ll>::iterator i = memo.find(s);
+    if(i!=memo.end() && memo[state(cur+1,sum+a[cur])]==best){
         out[cur] = 1;
-        outS+=a[cur];
+        tsum+=a[cur];
         print(cur+1,sum+a[cur]);
-    } else 
+    } else {
+        tsum-=a[cur];
         out[cur] = -1;
         print(cur+1,sum);
+    }
 }
 
 int main(){
     cin >> N;
-    ll sum = 0;
-    ll minA;bool mnb = false;
     for(int i = 0; i < N; i++){
         scanf("%lld",&a[i]);
         sum+=a[i];
     }
     tgt = (sum+1L)/2L;
-    printf("tgt: %lld\n",tgt);
-    best = sum;
+    printf("tgt:%lld\n",tgt);
+    ll min = best = sum;
+    ll ans;
+    ll temp;
     res = dp(0,0);
-    printf("Total recursions: %lld\n",cnt);
+    printf("Total recursions: %lld, res:%lld\n",cnt,res);
     print(0,0);
-    printf("Sum:%lld\n",outS);
-    for(int i =0 ; i < N; i++)
+    printf("TSum %lld\n",tsum);
+    for(int i = 0; i < N; i++)
         printf("%d,",out[i]);
     cout << endl;
     return 0;
