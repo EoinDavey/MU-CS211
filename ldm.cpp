@@ -23,7 +23,6 @@ void rec(){
     int v1 = q.top(); q.pop();
     int v2 = q.top(); q.pop();
     int dif = v1-v2;
-    printf("%d,%d\n",v1,v2);
     q.push(dif);
     if(dif < mn_dif)
         mn_dif = dif;
@@ -55,14 +54,15 @@ void rec(){
 
 int main(){
     scanf("%d",&N);
+    int out[N];
     for(int i =0; i < N; i++){
         scanf("%lld",&a[i]);
         mn_dif+=a[i];
         q.push(a[i]);
+        out[i] = 0;
     }
     rec();
     while(!q.empty())q.pop();
-    printf("mn_dif:%lld\n",mn_dif);
     final = true;
     left.clear();
     right.clear();
@@ -70,19 +70,25 @@ int main(){
         q.push(a[i]);
     }
     rec();
-    ll lsum,rsum;
-    lsum=rsum=0;
-    printf("Left:");
     for(int i = 0; i < left.size(); i++){
-        lsum+=left[i];
-        printf(" %lld",left[i]);
+        //printf(" %lld",left[i]);
+        for(int j = 0; j < N; j++){
+            if(out[j]==0&&a[j]==left[i]){
+                out[j]=1;
+                break;
+            }
+        }
     }
-    printf("\nRight:");
     for(int i = 0; i < right.size(); i++){
-        rsum+=right[i];
-        printf(" %lld",right[i]);
+        for(int j = 0; j < N; j++){
+            if(out[j]==0&&a[j]==right[i]){
+                out[j]=-1;
+                break;
+            }
+        }
     }
-    printf("\n");
-    printf("left sum:%lld, right sum:%lld, dif:%lld\n",lsum,rsum,lsum-rsum);
+    for(int i = 0; i < N; i++){
+        printf("%d,",out[i]);
+    }
     return 0;
 }
